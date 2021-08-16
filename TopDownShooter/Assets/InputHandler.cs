@@ -1,18 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class InputHandler : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+
+    [SerializeField] InputMaster controls;
+    [SerializeField] PlayerMover playerMover;
+
+
+    private void Awake()
     {
+        //controls.Player.Shoot.performed += x => Shoot();
+    }
+
+
+    private void Update()
+    {
+        Vector3 MovementVector = new Vector3(controls.Player.HorizontalMove.ReadValue<float>(), 0f, controls.Player.VerticalMove.ReadValue<float>());
         
     }
 
-    // Update is called once per frame
-    void Update()
+    void Shoot()
     {
-        
+
     }
+
+    void Move(Vector2 moveVector)
+    {
+
+    }
+
 }

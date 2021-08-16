@@ -11,7 +11,7 @@
                     "id": "2b67352f-c5ba-43d4-bc71-c5642f4a7613",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "Press(pressPoint=1)"
                 },
                 {
                     "name": "HorizontalMove",
@@ -130,7 +130,7 @@
                 {
                     "name": "negative",
                     "id": "d6fcc3c4-4e31-4fc6-82a5-10ff5850ddfc",
-                    "path": "<Keyboard>/d",
+                    "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard and Mouse",
@@ -141,7 +141,7 @@
                 {
                     "name": "positive",
                     "id": "11d94e14-2dbf-4709-adaa-eccbb97c00c4",
-                    "path": "<Keyboard>/a",
+                    "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard and Mouse",
