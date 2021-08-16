@@ -38,11 +38,21 @@ public class PlayerMover : MonoBehaviour
         Debug.Log("Shoot");
     }
 
-    public void VerticalMove(InputAction.CallbackContext ctx) { VerticalInput = ctx.ReadValue<float>(); }
-    public void HorizontalMove(InputAction.CallbackContext ctx) { HorizontalInput = ctx.ReadValue<float>(); }
+    //public void VerticalMove(InputAction.CallbackContext ctx) { VerticalInput = ctx.ReadValue<float>(); }
+    //public void HorizontalMove(InputAction.CallbackContext ctx) { HorizontalInput = ctx.ReadValue<float>(); }
+
+    public void getInputMove(InputAction.CallbackContext ctx)
+    {
+        HorizontalInput = ctx.ReadValue<Vector2>().x;
+        VerticalInput = ctx.ReadValue<Vector2>().y;
+
+    }
 
     public void Move()
     {
+
+        Debug.Log("Trying to move");
+        
         Vector3 inputVector = new Vector3(HorizontalInput, 0f, VerticalInput);
         if(inputVector.magnitude != 0f)
         {
@@ -54,6 +64,7 @@ public class PlayerMover : MonoBehaviour
         {
             animator.SetBool("IsWalking", false);
         }
+
     }
 
 
