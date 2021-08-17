@@ -33,13 +33,6 @@ public class PlayerMover : MonoBehaviour
         Turn();
     }
 
-    public void Shoot(InputAction.CallbackContext ctx)
-    {
-        Debug.Log("Shoot");
-    }
-
-    //public void VerticalMove(InputAction.CallbackContext ctx) { VerticalInput = ctx.ReadValue<float>(); }
-    //public void HorizontalMove(InputAction.CallbackContext ctx) { HorizontalInput = ctx.ReadValue<float>(); }
 
     public void getInputMove(InputAction.CallbackContext ctx)
     {
@@ -50,9 +43,6 @@ public class PlayerMover : MonoBehaviour
 
     public void Move()
     {
-
-        Debug.Log("Trying to move");
-        
         Vector3 inputVector = new Vector3(HorizontalInput, 0f, VerticalInput);
         if(inputVector.magnitude != 0f)
         {
