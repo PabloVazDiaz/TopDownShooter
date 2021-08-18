@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Shooting : MonoBehaviour
 {
@@ -14,9 +15,7 @@ public class Shooting : MonoBehaviour
 
 
     public void Shoot()
-    {
-
-        Debug.Log("Shoot!!");
+    { 
         if (Time.time - LastShootTime > shootCooldown)
         {
             GameObject bullet = Instantiate(BulletPrefab, gunPoint.transform.position, gunPoint.transform.rotation);

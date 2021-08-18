@@ -47,8 +47,12 @@ public class Health : MonoBehaviour
         Audio.Play();
         HealthPoints -= damage;
 
-        hitParticles.transform.position = hitPoint;
-        hitParticles.Play();
+        if (hitParticles != null)
+        {
+            hitParticles.transform.position = hitPoint;
+            hitParticles.Play();
+        }
+
 
 
         if (HealthPoints <= 0)
