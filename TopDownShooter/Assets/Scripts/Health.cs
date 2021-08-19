@@ -15,10 +15,12 @@ public class Health : MonoBehaviour
     Animator animator;
 
     private bool isSinking= false;
-
+    private bool isDead = false;
     public delegate void DeathHandler();
     public event DeathHandler OnDeath;
 
+    public event Action<int> onHPChanged;
+    
 
     private void Awake()
     {
@@ -44,6 +46,8 @@ public class Health : MonoBehaviour
 
     public void GetDamaged(int damage, Vector3 hitPoint)
     {
+        if (isDead)
+            return;
         Audio.Play();
         HealthPoints -= damage;
 
@@ -53,6 +57,10 @@ public class Health : MonoBehaviour
             hitParticles.Play();
         }
 
+        if (onHPChanged != null)
+        {
+            onHPChanged(HealthPoints);
+        }
 
 
         if (HealthPoints <= 0)
@@ -70,6 +78,7 @@ public class Health : MonoBehaviour
 
     private void Die()
     {
+        isDead = true;
         animator.SetTrigger("Dead");
         GetComponent<CapsuleCollider>().enabled = false;
         if(OnDeath != null)

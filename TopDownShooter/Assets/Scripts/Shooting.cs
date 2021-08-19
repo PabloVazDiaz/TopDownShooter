@@ -10,7 +10,7 @@ public class Shooting : MonoBehaviour
     [SerializeField] float bulletSpeed;
     [SerializeField] float shootCooldown;
     [SerializeField] float bulletRange;
-
+    
     private float LastShootTime = 0;
 
 

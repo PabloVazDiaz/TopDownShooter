@@ -9,6 +9,7 @@ public class PlayerMover : MonoBehaviour
 
     [SerializeField] float speed = 6;
     [SerializeField] Animator animator;
+    [SerializeField] InputMaster Controls;
     
     Rigidbody playerRigidbody;
 
@@ -27,7 +28,7 @@ public class PlayerMover : MonoBehaviour
 
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         Move();
         Turn();
@@ -47,7 +48,8 @@ public class PlayerMover : MonoBehaviour
         if(inputVector.magnitude != 0f)
         {
             animator.SetBool("IsWalking", true);
-            Vector3 MovementVector = inputVector.normalized*speed*Time.deltaTime;
+            Vector3 MovementVector = inputVector.normalized * speed * Time.deltaTime;
+            //transform.position = transform.position + MovementVector;
             playerRigidbody.MovePosition(transform.position + MovementVector);
         }
         else
@@ -61,7 +63,9 @@ public class PlayerMover : MonoBehaviour
 
     private void Turn()
     {
+        
         Ray camRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        //Ray camRay = camera.ScreenPointToRay(Controls.Player.LookPosition.ReadValue<Vector2>());
         RaycastHit floorHit;
         if(Physics.Raycast(camRay, out floorHit, 100f, LayerMask.GetMask("Floor")))
         {
