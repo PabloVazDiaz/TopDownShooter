@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.IO;
+using System;
 
 public class GameController : MonoBehaviour
 {
@@ -18,7 +20,11 @@ public class GameController : MonoBehaviour
     private int BestScore;
     private float BestTime;
 
-    
+
+    private void Start()
+    {
+        LoadData();
+    }
     public void SetupGame()
     {
         //activate controls
@@ -32,7 +38,7 @@ public class GameController : MonoBehaviour
     {
         foreach (GameObject spawn in spawnPoints)
         {
-            GameObject EnemyToSpawn = EnemyTypes[Random.Range(0, EnemyTypes.Count)];
+            GameObject EnemyToSpawn = EnemyTypes[UnityEngine.Random.Range(0, EnemyTypes.Count)];
             GameObject Enemy = Instantiate(EnemyToSpawn, spawn.transform.position, Quaternion.identity);
             Enemy.GetComponent<Health>().OnDeath += ScorePoints;
         }
@@ -70,11 +76,29 @@ public class GameController : MonoBehaviour
         SaveData saveData = new SaveData();
         saveData.Score = points;
         saveData.Time = UIManager.StopTime;
-
+        try
+        {
+            File.WriteAllText(Application.persistentDataPath + "/SaveData.save", saveData.ToJson());
+        }catch(Exception e)
+        {
+            Debug.LogError($"Failed to write with exception {e}");
+        }
     }
 
     void LoadData()
     {
+        SaveData saveData = new SaveData();
+        try
+        {
+        saveData.LoadFromJson((File.ReadAllText(Application.persistentDataPath + "/SaveData.save")));
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Failed to read with exception {e}");
+        }
 
+        BestScore = saveData.Score;
+        BestTime = saveData.Time;
+        UIManager.ShowBestScore(BestScore, BestTime);
     }
 }

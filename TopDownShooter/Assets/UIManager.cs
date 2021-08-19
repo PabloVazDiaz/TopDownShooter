@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     public Slider HealthSlider;
     public Text ScoreText;
     public Text TimeText;
+    public Text BestScoreText;
     public Image HealthFlashImage;
     public CanvasGroup GameOverImage;
     public RectTransform GameOverText;
@@ -89,6 +90,13 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void ShowBestScore(int Score, float time)
+    {
+        int minutes;
+        int seconds;
+        DisplayTime(time, out minutes, out seconds);
+        BestScoreText.text = string.Format("Best score: {0} pts  {1:00}:{2:00}", Score, minutes, seconds);
+    }
 
     public void ShowTime()
     {
