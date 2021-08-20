@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyAI : MonoBehaviour
+public class EnemyAI : MonoBehaviour, IPooledObject
 {
     [SerializeField] int Damage;
     [SerializeField] float AttackRange;
@@ -67,5 +67,19 @@ public class EnemyAI : MonoBehaviour
         seekingPlayer = true;
     }
 
+    public void OnObjectSpawn()
+    {
+        Health health = GetComponent<Health>();
+        health.HealthPoints = health.MaxHealthPoints;
+        nav.enabled = true;
+        AttackType.enabled = true;
+        GetComponent<CapsuleCollider>().enabled = true;
+    }
 
+    public void OnObjectDisable()
+    {
+        nav.enabled = false;
+        AttackType.enabled = false;
+        
+    }
 }

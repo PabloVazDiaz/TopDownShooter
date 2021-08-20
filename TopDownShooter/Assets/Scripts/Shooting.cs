@@ -18,14 +18,22 @@ public class Shooting : MonoBehaviour
     { 
         if (Time.time - LastShootTime > shootCooldown)
         {
-            GameObject bullet = Instantiate(BulletPrefab, gunPoint.transform.position, gunPoint.transform.rotation);
+            //GameObject bullet = Instantiate(BulletPrefab, gunPoint.transform.position, gunPoint.transform.rotation);
+            GameObject bullet = ObjectPooler.instance.SpawnFromPool(PoolObject.PlayerBullet, gunPoint.transform.position, gunPoint.transform.rotation);
+            
             bullet.GetComponent<Rigidbody>().AddForce(bullet.transform.forward * bulletSpeed, ForceMode.Impulse);
             LastShootTime = Time.time;
-            Destroy(bullet, bulletRange / bulletSpeed);
+            StartCoroutine(DisableBullet(bullet, bulletRange / bulletSpeed));
+            //Destroy(bullet, bulletRange / bulletSpeed);
         }
 
 
     }
 
+    private IEnumerator DisableBullet(GameObject bullet, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        bullet.SetActive(false);
+    }
 
 }

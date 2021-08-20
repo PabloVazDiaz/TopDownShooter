@@ -32,10 +32,19 @@ public class EnemyShooting : EnemyAttack
         }
         Vector3 castingPosition = Vector3.MoveTowards(ShootingPoint.transform.position, target.transform.position, 0.5f);
         Quaternion castingRotation = Quaternion.LookRotation(target.transform.position - transform.position, transform.up);
-        GameObject bullet = Instantiate(Projectile, castingPosition, castingRotation);
+        //GameObject bullet = Instantiate(Projectile, castingPosition, castingRotation);
+        GameObject bullet = ObjectPooler.instance.SpawnFromPool(PoolObject.EnemyBullet, castingPosition, castingRotation);
+        
         bullet.GetComponent<Rigidbody>().AddForce(ProjectileSpeed * bullet.transform.forward, ForceMode.Impulse);
         CastingBar.value = 0;
+        StartCoroutine(DisableBullet(bullet, AttackRange / ProjectileSpeed));
         yield return new WaitForSeconds(AttackCooldown);
         isAttacking = false;
+    }
+
+    private IEnumerator DisableBullet(GameObject bullet, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        bullet.SetActive(false);
     }
 }

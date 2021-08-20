@@ -9,7 +9,7 @@ public class GameController : MonoBehaviour
 {
 
     [SerializeField] List<GameObject> spawnPoints = new List<GameObject>();
-    [SerializeField] List<GameObject> EnemyTypes = new List<GameObject>();
+    [SerializeField] List<PoolObject> EnemyTypes = new List<PoolObject>();
     [SerializeField] int WaveTimer;
     [SerializeField] int MinWaveTimer;
     [SerializeField] int WaveTimerDecrease;
@@ -38,9 +38,11 @@ public class GameController : MonoBehaviour
     {
         foreach (GameObject spawn in spawnPoints)
         {
-            GameObject EnemyToSpawn = EnemyTypes[UnityEngine.Random.Range(0, EnemyTypes.Count)];
-            GameObject Enemy = Instantiate(EnemyToSpawn, spawn.transform.position, Quaternion.identity);
+            PoolObject EnemyToSpawn = EnemyTypes[UnityEngine.Random.Range(0, EnemyTypes.Count)];
+            //GameObject Enemy = Instantiate(EnemyToSpawn, spawn.transform.position, Quaternion.identity);
+            GameObject Enemy = ObjectPooler.instance.SpawnFromPool(EnemyToSpawn, spawn.transform.position, Quaternion.identity);
             Enemy.GetComponent<Health>().OnDeath += ScorePoints;
+            Enemy.GetComponent<IPooledObject>().OnObjectSpawn();
         }
         yield return new WaitForSeconds(WaveTimer);
         WaveTimer = Mathf.Max(WaveTimer - WaveTimerDecrease, MinWaveTimer);

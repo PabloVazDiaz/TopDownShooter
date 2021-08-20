@@ -6,8 +6,8 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
 
-    [SerializeField] int MaxHealthPoints;
-    [SerializeField] int HealthPoints;
+    public int MaxHealthPoints;
+    public int HealthPoints;
     float sinkSpeed = 0.5f;
 
     AudioSource Audio;
@@ -39,7 +39,7 @@ public class Health : MonoBehaviour
     {
         if (isSinking)
         {
-            transform.Translate(Vector3.down * sinkSpeed * Time.deltaTime);
+            //transform.Translate(Vector3.down * sinkSpeed * Time.deltaTime);
         }
 
     }
@@ -73,7 +73,8 @@ public class Health : MonoBehaviour
     public void StartSinking()
     {
         isSinking = true;
-        Destroy(gameObject, 2f);
+        LeanTween.moveY(gameObject, -3f, 2f).setOnComplete(x => gameObject.SetActive(false));
+        //Destroy(gameObject, 2f);
     }
 
     private void Die()
@@ -81,6 +82,7 @@ public class Health : MonoBehaviour
         isDead = true;
         animator.SetTrigger("Dead");
         GetComponent<CapsuleCollider>().enabled = false;
+        GetComponent<IPooledObject>().OnObjectDisable();
         if(OnDeath != null)
             OnDeath();
 
