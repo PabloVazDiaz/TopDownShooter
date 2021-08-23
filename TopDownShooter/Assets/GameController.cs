@@ -4,16 +4,23 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.IO;
 using System;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
 
     [SerializeField] List<GameObject> spawnPoints = new List<GameObject>();
     [SerializeField] List<PoolObject> EnemyTypes = new List<PoolObject>();
+    [SerializeField] List<PowerUpInfo> PowerUps = new List<PowerUpInfo>();
     [SerializeField] int WaveTimer;
     [SerializeField] int MinWaveTimer;
     [SerializeField] int WaveTimerDecrease;
     [SerializeField] UIManager UIManager;
+
+    public GameObject powerUpPrefab;
+
+    [Range(0,1)]
+    public float PowerUpProb;
     public Health player;
     public int points = 0;
 
@@ -42,6 +49,7 @@ public class GameController : MonoBehaviour
             //GameObject Enemy = Instantiate(EnemyToSpawn, spawn.transform.position, Quaternion.identity);
             GameObject Enemy = ObjectPooler.instance.SpawnFromPool(EnemyToSpawn, spawn.transform.position, Quaternion.identity);
             Enemy.GetComponent<Health>().OnDeath += ScorePoints;
+            Enemy.GetComponent<Health>().OnDeath += SpawnPowerUp;
             Enemy.GetComponent<IPooledObject>().OnObjectSpawn();
         }
         yield return new WaitForSeconds(WaveTimer);
@@ -49,7 +57,17 @@ public class GameController : MonoBehaviour
         StartCoroutine(SpawnEnemies());
     }
 
-    void GameOver()
+    private void SpawnPowerUp(Vector3 position)
+    {
+        if(UnityEngine.Random.Range(0, 1) < PowerUpProb)
+        {
+
+            GameObject go = Instantiate(powerUpPrefab, position, Quaternion.identity);
+            go.GetComponent<PowerUp>().powerUpInfo = PowerUps[UnityEngine.Random.Range(0, PowerUps.Count)];
+        }
+    }
+
+    void GameOver(Vector3 position)
     {
         //disable input and spawns 
         StopAllCoroutines();
@@ -60,14 +78,18 @@ public class GameController : MonoBehaviour
         {
             SaveData();
         }
+
     }
+
+   
+
 
     public void QuitGame()
     {
         Application.Quit();
     }
 
-    void ScorePoints()
+    void ScorePoints(Vector3 position)
     {
         points += 10;
         UIManager.ChangeScore(points);

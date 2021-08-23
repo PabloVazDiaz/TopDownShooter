@@ -1,25 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     public Health player;
     public Slider HealthSlider;
+    public Slider PowerUpSlider;
     public Text ScoreText;
     public Text TimeText;
     public Text BestScoreText;
+    public Text PowerUpText;
     public Image HealthFlashImage;
     public CanvasGroup GameOverImage;
     public RectTransform GameOverText;
     public GameObject GameOverScore;
     public GameObject MainMenu;
     public GameObject HUDCanvas;
+    public GameObject PowerUPCanvas;
 
     private float StartTime;
     public float StopTime;
 
+
+   
     private void Start()
     {
         player.onHPChanged += ChangeHP;
@@ -70,6 +76,7 @@ public class UIManager : MonoBehaviour
         StopTime = Time.time - StartTime;
         LeanTween.alphaCanvas(GameOverImage, 1, 1f).setDelay(1.5f);
         LeanTween.alphaText(GameOverText, 1, 1f).setDelay(1.5f).setOnComplete(ShowGameOverScore);
+        
     }
 
     public void ShowGameOverScore()
@@ -77,7 +84,7 @@ public class UIManager : MonoBehaviour
         //Añadir tiempo
         GameOverScore.GetComponent<Text>().text = ScoreText.text;
         ScoreText.enabled = false;
-        LeanTween.scale(GameOverScore, Vector3.one, 1f);
+        LeanTween.scale(GameOverScore, Vector3.one, 1f).setOnComplete(x=> SceneManager.LoadScene(SceneManager.GetSceneAt(0).name)) ;
     }
 
     private IEnumerator HealthFlash(Color color, float duration)
@@ -95,7 +102,7 @@ public class UIManager : MonoBehaviour
         int minutes;
         int seconds;
         DisplayTime(time, out minutes, out seconds);
-        BestScoreText.text = string.Format("Best score: {0} pts  {1:00}:{2:00}", Score, minutes, seconds);
+        BestScoreText.text = string.Format("Best score: \n {0} pts  {1:00}:{2:00}", Score, minutes, seconds);
     }
 
     public void ShowTime()
@@ -112,5 +119,19 @@ public class UIManager : MonoBehaviour
          seconds = Mathf.FloorToInt(time % 60);
     }
 
+    public void showPowerUp(string name, float remainingTime)
+    {
+        if (remainingTime > 0)
+        {
+            PowerUPCanvas.SetActive(true);
+            PowerUpText.text = name;
+            PowerUpSlider.value =  remainingTime;
+        }
+        else
+        {
+
+            PowerUPCanvas.SetActive(false);
+        }
+    }
     
 }

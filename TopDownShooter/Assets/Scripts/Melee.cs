@@ -6,9 +6,12 @@ public class Melee : MonoBehaviour
 {
 
     [SerializeField] float meleeCooldown;
-    [SerializeField] int meleeDamage;
     [SerializeField] float meleePushForce;
     [SerializeField] GameObject meleeObject;
+
+    [Powerable]
+    public float meleeDamage;
+    public float meleeAttackAngle = 45f;
 
     private TrailRenderer meleeTrail;
     private float timeLastAttack;
@@ -35,7 +38,7 @@ public class Melee : MonoBehaviour
         {
             if (collider.gameObject.CompareTag("Enemy"))
             {
-                collider.GetComponent<Health>().GetDamaged(meleeDamage, collider.ClosestPoint(transform.position));
+                collider.GetComponent<Health>().GetDamaged((int)meleeDamage, collider.ClosestPoint(transform.position));
                 collider.GetComponent<Rigidbody>().AddForce(transform.forward * meleePushForce, ForceMode.Impulse);
             }
         }
@@ -45,7 +48,7 @@ public class Melee : MonoBehaviour
     {
         meleeTrail.enabled = true;
         yield return new WaitForEndOfFrame();
-        meleeObject.transform.Rotate(Vector3.up, 45);
+        meleeObject.transform.Rotate(Vector3.up, meleeAttackAngle);
         yield return new WaitForEndOfFrame();
         meleeTrail.enabled = false;
         //yield return new WaitForSeconds(0.5f);

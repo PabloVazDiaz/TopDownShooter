@@ -8,6 +8,7 @@ public class EnemyAI : MonoBehaviour, IPooledObject
     [SerializeField] int Damage;
     [SerializeField] float AttackRange;
     [SerializeField] float AttackCooldown;
+    [SerializeField] float rotationSpeed;
 
     EnemyAttack AttackType;
 
@@ -15,7 +16,7 @@ public class EnemyAI : MonoBehaviour, IPooledObject
     NavMeshAgent nav;
     bool seekingPlayer = true;
     bool attackingPlayer = false;
-
+    Rigidbody rb;
 
 
     private void Awake()
@@ -24,9 +25,10 @@ public class EnemyAI : MonoBehaviour, IPooledObject
         nav = GetComponent<NavMeshAgent>();
         GetComponent<Health>().OnDeath += DisableNavMesh;
         AttackType = GetComponent<EnemyAttack>();
+        rb = GetComponent<Rigidbody>();
     }
 
-    void DisableNavMesh()
+    void DisableNavMesh(Vector3 position)
     {
         seekingPlayer = false;
         nav.enabled = false;
@@ -51,7 +53,7 @@ public class EnemyAI : MonoBehaviour, IPooledObject
         nav.SetDestination(player.position);
         if (AttackType.IsTargetInRange(player))
         {
-            DisableNavMesh();
+            DisableNavMesh(transform.position);
             attackingPlayer = true;
         }
         else
@@ -63,14 +65,23 @@ public class EnemyAI : MonoBehaviour, IPooledObject
 
     private void AttackBehaviour()
     {
+        FaceTarget();
         AttackType.PerformAttack(player);
         seekingPlayer = true;
+    }
+
+    private void FaceTarget()
+    {
+        Quaternion RotationToPlayer = Quaternion.LookRotation(player.position - transform.position);
+        Quaternion newRotation = Quaternion.Lerp(transform.rotation, RotationToPlayer, rotationSpeed * Time.deltaTime);
+        rb.MoveRotation(newRotation);
     }
 
     public void OnObjectSpawn()
     {
         Health health = GetComponent<Health>();
         health.HealthPoints = health.MaxHealthPoints;
+        health.isDead = false;
         nav.enabled = true;
         AttackType.enabled = true;
         GetComponent<CapsuleCollider>().enabled = true;
@@ -80,6 +91,6 @@ public class EnemyAI : MonoBehaviour, IPooledObject
     {
         nav.enabled = false;
         AttackType.enabled = false;
-        
+        AttackType.StopAllCoroutines();
     }
 }

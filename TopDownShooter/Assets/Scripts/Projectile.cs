@@ -24,6 +24,10 @@ public class Projectile : MonoBehaviour, IPooledObject
         {
             other.GetComponent<Health>().GetDamaged(damage, transform.position);
             gameObject.SetActive(false);
+        }else if (other.tag.Equals("Environment"))
+        {
+            gameObject.SetActive(false);
         }
+
     }
 }

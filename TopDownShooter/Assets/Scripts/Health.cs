@@ -15,8 +15,8 @@ public class Health : MonoBehaviour
     Animator animator;
 
     private bool isSinking= false;
-    private bool isDead = false;
-    public delegate void DeathHandler();
+    public bool isDead = false;
+    public delegate void DeathHandler(Vector3 position);
     public event DeathHandler OnDeath;
 
     public event Action<int> onHPChanged;
@@ -73,7 +73,7 @@ public class Health : MonoBehaviour
     public void StartSinking()
     {
         isSinking = true;
-        LeanTween.moveY(gameObject, -3f, 2f).setOnComplete(x => gameObject.SetActive(false));
+        LeanTween.moveY(gameObject, -3f,1/ sinkSpeed).setOnComplete(x => gameObject.SetActive(false));
         //Destroy(gameObject, 2f);
     }
 
@@ -82,9 +82,10 @@ public class Health : MonoBehaviour
         isDead = true;
         animator.SetTrigger("Dead");
         GetComponent<CapsuleCollider>().enabled = false;
-        GetComponent<IPooledObject>().OnObjectDisable();
+        GetComponent<IPooledObject>()?.OnObjectDisable();
         if(OnDeath != null)
-            OnDeath();
+            OnDeath(transform.position);
+        
 
     }
 }

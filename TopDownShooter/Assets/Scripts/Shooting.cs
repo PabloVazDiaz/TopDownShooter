@@ -8,8 +8,11 @@ public class Shooting : MonoBehaviour
     [SerializeField] GameObject gunPoint;
     [SerializeField] GameObject BulletPrefab;
     [SerializeField] float bulletSpeed;
-    [SerializeField] float shootCooldown;
-    [SerializeField] float bulletRange;
+    
+    [Powerable]
+    public float shootCooldown;
+    [Powerable]
+    public float bulletRange;
     
     private float LastShootTime = 0;
 

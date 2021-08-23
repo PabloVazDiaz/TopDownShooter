@@ -6,10 +6,11 @@ using UnityEngine.InputSystem;
 
 public class PlayerMover : MonoBehaviour
 {
-
-    [SerializeField] float speed = 6;
+    [Powerable]
+    public float speed = 6;
     [SerializeField] Animator animator;
     [SerializeField] InputMaster Controls;
+    [SerializeField] PlayerInput playerInput;
     
     Rigidbody playerRigidbody;
 
@@ -24,14 +25,15 @@ public class PlayerMover : MonoBehaviour
     {
         playerRigidbody = GetComponent<Rigidbody>();
         camera = Camera.main;
-
+        playerInput = GetComponent<PlayerInput>();
 
     }
 
     private void FixedUpdate()
     {
+        
         Move();
-        Turn();
+        //Turn();
     }
 
 
@@ -59,13 +61,43 @@ public class PlayerMover : MonoBehaviour
 
     }
 
+    public void ControlTurn(InputAction.CallbackContext ctx)
+    {
 
+        if (playerInput.currentControlScheme.Equals("Keyboard and Mouse"))
+        {
 
+            // Ray camRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            Ray camRay = camera.ScreenPointToRay(ctx.ReadValue<Vector2>());
+            RaycastHit floorHit;
+            if (Physics.Raycast(camRay, out floorHit, 100f, LayerMask.GetMask("Floor")))
+            {
+                Vector3 playerToMouse = floorHit.point - transform.position;
+                playerToMouse.y = 0f;
+                Quaternion newRotation = Quaternion.LookRotation(playerToMouse);
+                playerRigidbody.MoveRotation(newRotation);
+            }
+        }
+        if (playerInput.currentControlScheme.Equals("Gamepad"))
+        {
+            
+            Vector3 PointToLook = new Vector3(ctx.ReadValue<Vector2>().x, 0f, ctx.ReadValue<Vector2>().y);
+            if (PointToLook == Vector3.zero)
+                return;
+            //Vector3 PlayerToPoint = PointToLook - transform.position;
+            //playerToMouse.y = 0f;
+            Quaternion newRotation = Quaternion.LookRotation(PointToLook);
+            playerRigidbody.MoveRotation(newRotation);
+        }
+
+    }
+
+    /*
     private void Turn()
     {
-        
-        Ray camRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        //Ray camRay = camera.ScreenPointToRay(Controls.Player.LookPosition.ReadValue<Vector2>());
+        //Debug.Log(Controls.Player.LookPosition.ReadValue<Vector2>());
+       // Ray camRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        Ray camRay = camera.ScreenPointToRay(Controls.Player.LookPosition.ReadValue<Vector2>());
         RaycastHit floorHit;
         if(Physics.Raycast(camRay, out floorHit, 100f, LayerMask.GetMask("Floor")))
         {
@@ -76,4 +108,5 @@ public class PlayerMover : MonoBehaviour
         }
             
     }
+    */
 }
