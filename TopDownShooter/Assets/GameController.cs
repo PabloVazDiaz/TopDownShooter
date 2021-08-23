@@ -59,7 +59,7 @@ public class GameController : MonoBehaviour
 
     private void SpawnPowerUp(Vector3 position)
     {
-        if(UnityEngine.Random.Range(0, 1) < PowerUpProb)
+        if(UnityEngine.Random.Range(0, 1f) < PowerUpProb)
         {
 
             GameObject go = Instantiate(powerUpPrefab, position, Quaternion.identity);

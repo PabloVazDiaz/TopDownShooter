@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +12,7 @@ public class Melee : MonoBehaviour
 
     [Powerable]
     public float meleeDamage;
-    public float meleeAttackAngle = 45f;
+    public float meleeAttackAngle = 60f;
 
     private TrailRenderer meleeTrail;
     private float timeLastAttack;
@@ -29,10 +30,11 @@ public class Melee : MonoBehaviour
         if (Time.time - timeLastAttack < meleeCooldown)
             return;
         timeLastAttack = Time.time;
-        StartCoroutine(MeleeAnimation());
+        MeleeVisual();
+        //StartCoroutine(MeleeAnimation());
         //meleeObject.transform.RotateAround(transform.position, 20f);
         //physics cone
-        Collider[] hitEnemies = Physics.OverlapSphere(transform.position + transform.forward, 1);
+        Collider[] hitEnemies = Physics.OverlapSphere(transform.position + transform.forward, 1.5f);
         //damage and push
         foreach (Collider collider in hitEnemies)
         {
@@ -42,6 +44,15 @@ public class Melee : MonoBehaviour
                 collider.GetComponent<Rigidbody>().AddForce(transform.forward * meleePushForce, ForceMode.Impulse);
             }
         }
+    }
+
+    private void MeleeVisual()
+    {
+        meleeTrail.enabled = true;
+        LeanTween.rotateAround(meleeObject, Vector3.up, meleeAttackAngle, 0.05f).setOnComplete(x => meleeTrail.enabled = false);
+        LeanTween.rotateAround(meleeObject, Vector3.up, -meleeAttackAngle, 0f);
+
+
     }
 
     private IEnumerator MeleeAnimation()

@@ -15,10 +15,17 @@ public class Shooting : MonoBehaviour
     public float bulletRange;
     
     private float LastShootTime = 0;
+    private bool isFiring = false;
 
+    private void Update()
+    {
+        if (isFiring)
+            Shoot();
+    }
 
     public void Shoot()
-    { 
+    {
+        
         if (Time.time - LastShootTime > shootCooldown)
         {
             //GameObject bullet = Instantiate(BulletPrefab, gunPoint.transform.position, gunPoint.transform.rotation);
@@ -32,6 +39,15 @@ public class Shooting : MonoBehaviour
 
 
     }
+
+    public void ToogleShooting(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed)
+            return;
+        Debug.Log("pum");
+        isFiring = !isFiring;
+    }
+
 
     private IEnumerator DisableBullet(GameObject bullet, float delay)
     {

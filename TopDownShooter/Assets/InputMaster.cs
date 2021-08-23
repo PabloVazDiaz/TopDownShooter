@@ -24,7 +24,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""id"": ""2b67352f-c5ba-43d4-bc71-c5642f4a7613"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Press(pressPoint=1)""
+                    ""interactions"": ""Press(behavior=2)""
                 },
                 {
                     ""name"": ""HorizontalMove"",
@@ -83,7 +83,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""name"": """",
                     ""id"": ""12fec139-798b-4ecd-83fd-b735c4058825"",
                     ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
+                    ""interactions"": ""Press(behavior=2)"",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Shoot"",
